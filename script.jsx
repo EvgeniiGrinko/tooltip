@@ -3,13 +3,19 @@ class Tooltip extends React.Component {
         super(props) 
         this.state = { 
             opacity : false,
+            toolTipClasses : 'tooltip ' + this.props.positionWhereShowText 
         }
         this.toggle = this.toggle.bind(this)
         this.onMouseOut = this.onMouseOut.bind(this)
         this.onMouseEnter = this.onMouseEnter.bind(this)
         this.onClick = this.onClick.bind(this)
         
+        
     }
+        
+  
+    
+    
     onClick(){
         if(!this.props.allowOnClick){
             return false
@@ -38,13 +44,15 @@ class Tooltip extends React.Component {
     }
     
     render() {
+        const top = this.state.top || 0 ;
         const style = {
             zIndex: (this.state.opacity) ? 1000 : -1000,
             opacity: +this.state.opacity,
-            top: (this.state.top || 0) + 20,
+            top: top + (this.props.positionWhereShowText === "top" ? -30 : +20) ,
             left: (this.state.left || 0 )- 40
-
+            
         }
+        
         return (
             <div style={{display: "inline"}}>
                 <span style={{color: 'blue'}}
@@ -54,7 +62,7 @@ class Tooltip extends React.Component {
                 >
                     {this.props.children}
                 </span>
-                <div className='tooltip bottom' style={style} role='tooltip'>
+                <div className={this.state.toolTipClasses} style={style} role='tooltip'>
                     <div className="tooltip-arrow"></div>
                     <div className="tooltip-inner">
                         {this.props.text}
@@ -66,7 +74,6 @@ class Tooltip extends React.Component {
 }
 
 ReactDOM.render(<div>
-    <Tooltip text="The book you're reading now" allowOnMouseOver={true} allowOnClick={true} positionWhereShowText="top">React Quickly </Tooltip>
-     was published in 2017. it's awesome!
+    <Tooltip text="The book you're reading now" allowOnMouseOver={true} allowOnClick={true} positionWhereShowText='bottom'>React Quickly </Tooltip>was published in 2017. it's awesome!
 </div>,
 document.getElementById('tooltip'))
