@@ -1,10 +1,32 @@
 class Tooltip extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { opacity: false };
+        this.state = {
+            opacity: false
+        };
         this.toggle = this.toggle.bind(this);
+        this.onMouseOut = this.onMouseOut.bind(this);
+        this.onMouseEnter = this.onMouseEnter.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
-
+    onClick() {
+        if (!this.props.allowOnClick) {
+            return false;
+        }
+        this.toggle();
+    }
+    onMouseOut() {
+        if (!this.props.allowOnMouseOver) {
+            return false;
+        }
+        this.toggle();
+    }
+    onMouseEnter() {
+        if (!this.props.allowOnMouseOver) {
+            return false;
+        }
+        this.toggle();
+    }
     toggle() {
         const { offsetTop: top, offsetLeft: left } = ReactDOM.findDOMNode(this);
         this.setState({
@@ -19,7 +41,7 @@ class Tooltip extends React.Component {
             zIndex: this.state.opacity ? 1000 : -1000,
             opacity: +this.state.opacity,
             top: (this.state.top || 0) + 20,
-            left: (this.state.left || 0) - 30
+            left: (this.state.left || 0) - 40
 
         };
         return React.createElement(
@@ -28,7 +50,9 @@ class Tooltip extends React.Component {
             React.createElement(
                 'span',
                 { style: { color: 'blue' },
-                    onClick: this.toggle
+                    onClick: this.onClick,
+                    onMouseEnter: this.onMouseEnter,
+                    onMouseOut: this.onMouseOut
                 },
                 this.props.children
             ),
@@ -51,7 +75,7 @@ ReactDOM.render(React.createElement(
     null,
     React.createElement(
         Tooltip,
-        { text: 'The book you\'re reading now' },
+        { text: 'The book you\'re reading now', allowOnMouseOver: true, allowOnClick: true, positionWhereShowText: 'top' },
         'React Quickly '
     ),
     'was published in 2017. it\'s awesome!'

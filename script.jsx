@@ -1,10 +1,33 @@
 class Tooltip extends React.Component {
     constructor(props) {
         super(props) 
-        this.state = { opacity : false }
+        this.state = { 
+            opacity : false,
+        }
         this.toggle = this.toggle.bind(this)
+        this.onMouseOut = this.onMouseOut.bind(this)
+        this.onMouseEnter = this.onMouseEnter.bind(this)
+        this.onClick = this.onClick.bind(this)
+        
     }
-
+    onClick(){
+        if(!this.props.allowOnClick){
+            return false
+        }
+        this.toggle()
+    }
+    onMouseOut(){
+        if(!this.props.allowOnMouseOver){
+            return false
+        }
+        this.toggle()
+    }
+    onMouseEnter() {
+        if(!this.props.allowOnMouseOver){
+            return false
+        }
+        this.toggle()
+    }
     toggle() {
         const {offsetTop: top, offsetLeft: left} = ReactDOM.findDOMNode(this)
         this.setState({
@@ -13,25 +36,27 @@ class Tooltip extends React.Component {
             left
         })
     }
-
+    
     render() {
         const style = {
             zIndex: (this.state.opacity) ? 1000 : -1000,
             opacity: +this.state.opacity,
             top: (this.state.top || 0) + 20,
-            left: (this.state.left || 0) -30
+            left: (this.state.left || 0 )- 40
 
         }
         return (
             <div style={{display: "inline"}}>
                 <span style={{color: 'blue'}}
-                onClick={this.toggle} 
+                onClick={this.onClick} 
+                onMouseEnter={this.onMouseEnter}
+                onMouseOut={this.onMouseOut}
                 >
                     {this.props.children}
                 </span>
                 <div className='tooltip bottom' style={style} role='tooltip'>
                     <div className="tooltip-arrow"></div>
-                    <div className="tooltip-inner" >
+                    <div className="tooltip-inner">
                         {this.props.text}
                     </div>
                 </div>
@@ -41,7 +66,7 @@ class Tooltip extends React.Component {
 }
 
 ReactDOM.render(<div>
-    <Tooltip text="The book you're reading now">React Quickly </Tooltip>
+    <Tooltip text="The book you're reading now" allowOnMouseOver={true} allowOnClick={true} positionWhereShowText="top">React Quickly </Tooltip>
      was published in 2017. it's awesome!
 </div>,
 document.getElementById('tooltip'))
