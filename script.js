@@ -28,8 +28,8 @@ class Tooltip extends React.Component {
             React.createElement(
                 'span',
                 { style: { color: 'blue' },
-                    onMouseEnter: this.toggle,
-                    onMouseOut: this.toggle },
+                    onClick: this.toggle
+                },
                 this.props.children
             ),
             React.createElement(
